@@ -2,7 +2,7 @@ import mongoose, { Document } from "mongoose";
 import validator from "validator";
 import bcrypt from "bcrypt";
 
-interface IUser extends Document {
+export interface IUser extends Document {
   name: string;
   email: string;
   photo: string;
@@ -13,6 +13,10 @@ interface IUser extends Document {
   passwordResetToken: string;
   passwordResetExpires: Date;
   active: boolean;
+  correctPassword(
+    password: string,
+    candidatePassword: string
+  ): Promise<boolean>;
 }
 
 const userSchema = new mongoose.Schema({
@@ -71,6 +75,13 @@ userSchema.pre("save", async function (next) {
   //   this.passwordConfirm = undefined;
   next();
 });
+
+userSchema.methods.correctPassword = async function (
+  candidatePassword: string,
+  userPassword: string
+) {
+  return await bcrypt.compare(candidatePassword, userPassword);
+};
 
 const userModel = mongoose.model("User", userSchema);
 
