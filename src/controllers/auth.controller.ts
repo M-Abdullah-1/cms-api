@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import userModel from "../models/user.model";
 import jwt from "jsonwebtoken";
 import { IUser } from "../models/user.model";
+import catchAsync from "../utils/catchAsync";
 
 /**
  * @description     this function will generate a token according to user id.
@@ -24,40 +25,34 @@ const signToken = (id: any) => {
  * @description     This controller will use to create new user.
  * @returns     It will return a created user.
  */
-export const signup = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const newUser = await userModel.create({
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm,
-  });
+export const signup = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const newUser = await userModel.create({
+      name: req.body.name,
+      email: req.body.email,
+      password: req.body.password,
+      passwordConfirm: req.body.passwordConfirm,
+    });
 
-  const token = signToken(newUser._id);
+    const token = signToken(newUser._id);
 
-  res.status(200).json({
-    status: "success",
-    token,
-    data: {
-      user: newUser,
-    },
-  });
-};
+    res.status(200).json({
+      status: "success",
+      token,
+      data: {
+        user: newUser,
+      },
+    });
+  }
+);
 
 /**
  * @name    login
  * @description     this is for login
  * @returns     it will return a token
  */
-export const login = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const login = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
     // 1) check if email and password is exist
     if (!email || !password) {
@@ -74,7 +69,5 @@ export const login = async (
       status: "success",
       token,
     });
-  } catch (error) {
-    console.log(error);
   }
-};
+);

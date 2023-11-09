@@ -1,12 +1,10 @@
+import { Request, Response, NextFunction } from "express";
 import bookModel from "../models/book.model";
-import express from "express";
+import catchAsync from "../utils/catchAsync";
+import AppError from "../utils/appError";
 
-exports.getAllBooks = async (
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
-) => {
-  try {
+exports.getAllBooks = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const book = await bookModel.find();
     res.status(200).json({
       status: "success",
@@ -15,45 +13,34 @@ exports.getAllBooks = async (
         book,
       },
     });
-  } catch (error) {
-    return res.status(400).json({
-      status: "fail",
-      data: {
-        error,
-      },
-    });
   }
-};
+);
 
-exports.getBook = async (
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
-) => {
-  try {
-    const book = await bookModel.findById(req.params.bookId);
+exports.getBook = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const bookId = req.params.bookId;
+    const book = await bookModel.findById(bookId);
+
+    /**
+     * @description If book not found according to given ID.
+     */
+    if (!book) {
+      return next(
+        new AppError(`No book found with that ${req.params.bookId} ID`, 404)
+      );
+    }
+
     res.status(200).json({
       status: "success",
       data: {
         book,
       },
     });
-  } catch (error) {
-    res.status(400).json({
-      status: "fail",
-      data: {
-        error,
-      },
-    });
   }
-};
+);
 
-exports.createBook = async (
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
-) => {
-  try {
+exports.createBook = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const newBook = await bookModel.create(req.body);
     res.status(200).json({
       status: "success",
@@ -61,22 +48,11 @@ exports.createBook = async (
         book: newBook,
       },
     });
-  } catch (error) {
-    res.status(400).json({
-      status: "fail",
-      data: {
-        error,
-      },
-    });
   }
-};
+);
 
-exports.updateBook = async (
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
-) => {
-  try {
+exports.updateBook = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const book = await bookModel.findByIdAndUpdate(
       req.params.bookId,
       req.body,
@@ -92,37 +68,20 @@ exports.updateBook = async (
         book,
       },
     });
-  } catch (error) {
-    res.status(400).json({
-      status: "fail",
-      data: {
-        error,
-      },
-    });
   }
-};
+);
 
-exports.deleteBook = async (
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
-) => {
-  try {
-    const bookId = req.params.bookId;
-    await bookModel.findByIdAndDelete(bookId);
-    res.status(200).json({
-      status: "success",
-      data: {
-        msg: `deleteBook of this ${bookId} ID`,
-      },
-    });
-  } catch (error) {
-    const bookId = req.params.bookId;
-    res.status(400).json({
-      status: "fail",
-      data: {
-        msg: `deleteBook of this ${bookId} ID`,
-      },
-    });
+exports.deleteBook = catchAsync(async (req: Request, res: Response) => {
+  const bookId = req.params.bookId;
+  const book = await bookModel.findByIdAndDelete(bookId);
+  if (!book) {
+    new AppError(`No book found with that ${bookId} ID`, 404);
   }
-};
+  res.status(200).json({
+    status: "success",
+    data: {
+      msg: `deleteBook of this ${bookId} ID`,
+      book,
+    },
+  });
+});
