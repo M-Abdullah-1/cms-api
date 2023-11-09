@@ -1,7 +1,7 @@
-const express = require("express");
+import { Router } from "express";
 const bookController = require("./../controllers/book.controller");
 
-const router = express.Router();
+const router = Router();
 
 router
   .route("/")
@@ -14,4 +14,4 @@ router
   .patch(bookController.updateBook)
   .delete(bookController.deleteBook);
 
-module.exports = router;
+export default router;
