@@ -1,7 +1,8 @@
 import express from "express";
-const morgan = require("morgan");
+import morgan from "morgan";
 
-const bookRoute = require("./routes/book.route");
+import userRoute from "./routes/user.route";
+import bookRoute from "./routes/book.route";
 
 const app = express();
 
@@ -12,6 +13,7 @@ if (process.env.NODE_ENV === "development") {
 app.use(express.json());
 
 app.use("/api/v1/book", bookRoute);
+app.use("/api/v1/auth", userRoute);
 
 app.get("/api/v1/health-check", (req, res, next) => {
   return res.status(200).json({
