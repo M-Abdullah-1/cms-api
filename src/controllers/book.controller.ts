@@ -3,7 +3,7 @@ import bookModel from "../models/book.model";
 import catchAsync from "../utils/catchAsync";
 import AppError from "../utils/appError";
 
-exports.getAllBooks = catchAsync(
+export const getAllBooks = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const book = await bookModel.find();
     res.status(200).json({
@@ -16,7 +16,7 @@ exports.getAllBooks = catchAsync(
   }
 );
 
-exports.getBook = catchAsync(
+export const getBook = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const bookId = req.params.bookId;
     const book = await bookModel.findById(bookId);
@@ -39,7 +39,7 @@ exports.getBook = catchAsync(
   }
 );
 
-exports.createBook = catchAsync(
+export const createBook = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const newBook = await bookModel.create(req.body);
     res.status(200).json({
@@ -51,7 +51,7 @@ exports.createBook = catchAsync(
   }
 );
 
-exports.updateBook = catchAsync(
+export const updateBook = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const book = await bookModel.findByIdAndUpdate(
       req.params.bookId,
@@ -71,7 +71,7 @@ exports.updateBook = catchAsync(
   }
 );
 
-exports.deleteBook = catchAsync(async (req: Request, res: Response) => {
+export const deleteBook = catchAsync(async (req: Request, res: Response) => {
   const bookId = req.params.bookId;
   const book = await bookModel.findByIdAndDelete(bookId);
   if (!book) {
