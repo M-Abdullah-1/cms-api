@@ -3,6 +3,8 @@ import morgan from "morgan";
 
 import userRoute from "./routes/user.route";
 import bookRoute from "./routes/book.route";
+import AppError from "./utils/appError";
+import globalErrorHandler from "./controllers/error.controller";
 
 const app = express();
 
@@ -25,10 +27,9 @@ app.get("/api/v1/health-check", (req, res, next) => {
 });
 
 app.all("*", (req, res, next) => {
-  res.status(404).json({
-    status: "fail",
-    message: `Can't find ${req.originalUrl} on this server!`,
-  });
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
+
+app.use(globalErrorHandler);
 
 module.exports = app;
