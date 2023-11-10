@@ -80,7 +80,8 @@ export default (
   if (process.env.NODE_ENV === "development") {
     sendErrorDev(err, res);
   } else if (process.env.NODE_ENV === "production") {
-    let error = JSON.parse(JSON.stringify(err));
+    let errorCopy = { ...err, message: err.message };
+    let error = JSON.parse(JSON.stringify(errorCopy));
 
     if (error.name === "JsonWebTokenError") error = handleJWTError();
     if (error.name === "TokenExpiredError") error = handleJWTExpiredError();
