@@ -1,5 +1,22 @@
 import { Request, Response, NextFunction } from "express";
 import { IError } from "./../interfaces/error.interface";
+import AppError from "./../utils/appError.util";
+
+/**
+ * Creates an AppError for invalid JWT during login.
+ *
+ * @returns {AppError} AppError instance with an error message and status code.
+ */
+const handleJWTError = () =>
+  new AppError("Invalid Login, Please logIn again!", 401);
+
+/**
+ * Creates an AppError for expired JWT during login.
+ *
+ * @returns {AppError} AppError instance with an error message and status code.
+ */
+const handleJWTExpiredError = () =>
+  new AppError("You token has expired! Please log in again.", 401);
 
 /**
  * Sends detailed error response in development environment.
@@ -63,11 +80,10 @@ export default (
   if (process.env.NODE_ENV === "development") {
     sendErrorDev(err, res);
   } else if (process.env.NODE_ENV === "production") {
-    sendErrorProd(err, res);
-  }
+    let error = JSON.parse(JSON.stringify(err));
 
-  res.status(err.statusCode as number).json({
-    status: err.status,
-    message: err.message,
-  });
+    if (error.name === "JsonWebTokenError") error = handleJWTError();
+    if (error.name === "TokenExpiredError") error = handleJWTExpiredError();
+    sendErrorProd(error, res);
+  }
 };

@@ -16,6 +16,7 @@ export interface IUser extends Document {
   passwordResetToken: string;
   passwordResetExpires: Date;
   active: boolean;
+
   /**
    * Method to check if the provided password matches the user's stored password.
    *
@@ -27,4 +28,14 @@ export interface IUser extends Document {
     password: string,
     candidatePassword: string
   ): Promise<boolean>;
+
+  /**
+   * Checks if the user's password was changed after the provided JWT timestamp.
+   *
+   * @function changedPasswordAfter
+   * @memberof IUser
+   * @param {number} JWTTimestamp - The timestamp from the JWT payload.
+   * @returns {boolean} Returns true if the user's password was changed after the provided JWT timestamp, otherwise false.
+   */
+  changedPasswordAfter(JWTTimestamp: number): boolean;
 }

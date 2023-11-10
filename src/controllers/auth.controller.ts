@@ -3,6 +3,7 @@ import userModel from "./../models/user.model";
 import { IUser } from "./../interfaces/user.interface";
 import catchAsync from "../utils/catchAsync.util";
 import { signToken } from "./../utils/token.util";
+
 /**
  * Handles user signup by creating a new user, generating a JWT token, and sending the token in the response.
  *

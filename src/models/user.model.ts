@@ -89,6 +89,28 @@ userSchema.methods.correctPassword = async function (
 };
 
 /**
+ * Checks if the user's password was changed after a given JWT timestamp.
+ *
+ * @method changedPasswordAfter
+ * @memberof UserSchema.methods
+ * @param {number} JWTTimestamp - The timestamp of the JWT issuance.
+ * @returns {boolean} Returns true if the password was changed after the given JWT timestamp, otherwise false.
+ */
+userSchema.methods.changedPasswordAfter = function (JWTTimestamp: number) {
+  if (this.passwordChangedAt) {
+    // Convert passwordChangedAt timestamp to seconds
+    const changedTimeStamp = Math.floor(
+      this.passwordChangedAt.getTime() / 1000
+    );
+
+    return JWTTimestamp < changedTimeStamp;
+  }
+
+  // FALSE means not changed.
+  return false;
+};
+
+/**
  * Mongoose model for the User collection.
  *
  * @type {Model<IUser>}

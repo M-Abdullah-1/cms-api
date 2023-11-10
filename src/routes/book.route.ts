@@ -1,5 +1,6 @@
 import { Router } from "express";
 import * as bookController from "./../controllers/book.controller";
+import { protect as authProtect } from "../middlewares/auth.middleware";
 
 /**
  * Express router for book-related routes.
@@ -18,7 +19,7 @@ const router = Router();
  */
 router
   .route("/")
-  .get(bookController.getAllBooks)
+  .get(authProtect, bookController.getAllBooks)
   .post(bookController.createBook);
 
 /**
