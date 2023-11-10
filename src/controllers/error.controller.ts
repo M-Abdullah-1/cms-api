@@ -1,10 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-
-interface IError extends Error {
-  statusCode?: number;
-  status?: string;
-  isOperational?: boolean;
-}
+import { IError } from "./../interfaces/error.interface";
 
 const sendErrorDev = (err: IError, res: Response) => {
   res.status(err.statusCode as number).json({
