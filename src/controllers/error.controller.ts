@@ -1,6 +1,14 @@
 import { Request, Response, NextFunction } from "express";
 import { IError } from "./../interfaces/error.interface";
 
+/**
+ * Sends detailed error response in development environment.
+ *
+ * @function sendErrorDev
+ * @param {IError} err - The error object.
+ * @param {Response} res - Express response object.
+ * @returns {void}
+ */
 const sendErrorDev = (err: IError, res: Response) => {
   res.status(err.statusCode as number).json({
     status: err.status,
@@ -10,6 +18,14 @@ const sendErrorDev = (err: IError, res: Response) => {
   });
 };
 
+/**
+ * Sends simplified error response in production environment.
+ *
+ * @function sendErrorProd
+ * @param {IError} err - The error object.
+ * @param {Response} res - Express response object.
+ * @returns {void}
+ */
 const sendErrorProd = (err: IError, res: Response) => {
   if (err.isOperational) {
     res.status(err.statusCode as number).json({
@@ -17,7 +33,7 @@ const sendErrorProd = (err: IError, res: Response) => {
       message: err.message,
     });
   } else {
-    console.log("Error 💥", err);
+    console.log("Error 💥", err); // Log the error in production
     res.status(500).json({
       status: "error",
       message: "Something went wrong!",
@@ -25,6 +41,16 @@ const sendErrorProd = (err: IError, res: Response) => {
   }
 };
 
+/**
+ * Express middleware for handling errors and sending appropriate responses.
+ *
+ * @function globalErrorHandler
+ * @param {IError} err - The error object.
+ * @param {Request} req - Express request object.
+ * @param {Response} res - Express response object.
+ * @param {NextFunction} next - Express next middleware function.
+ * @returns {void}
+ */
 export default (
   err: IError,
   req: Request,

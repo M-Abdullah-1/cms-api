@@ -1,24 +1,20 @@
-const dotenv = require("dotenv");
-const path = require("path");
+import dotenv from "dotenv";
+import path from "path";
+
 dotenv.config({ path: path.join(__dirname, "../config.env") });
 
-const app = require("./app");
+import app from "./app";
+import { connectToDatabase } from "./utils/database.util";
 
-// database connection
-const mongoose = require("mongoose");
-const DB_PWD = process.env.DATABASE_PASSWORD;
-if (DB_PWD !== undefined) {
-  const DB = process.env.DATABASE?.replace("<PASSWORD>", DB_PWD);
-  mongoose.connect(DB).then(() => console.log("DB connection successfull!"));
-} else {
-  console.log(`DB_PASSWORD is undefined!`);
-}
+// Call the function with the provided database password
+connectToDatabase(process.env.DATABASE_PASSWORD as string);
 
-/*
-@process.env.PORT : passing the port number for serve
-
-function: passing function, when the server is running then this callback function will execute.
-*/
+/**
+ *  Starts the server on the specfied port.
+ *
+ *  @param {number} - The port number on the server should listen.
+ *  @param {Function} - The callback function to be executed when the server is running.
+ */
 app.listen(process.env.PORT, () => {
   console.log(`server is running on port ${process.env.PORT}`);
 });

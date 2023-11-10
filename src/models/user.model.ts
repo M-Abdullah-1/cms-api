@@ -2,6 +2,12 @@ import mongoose, { Document } from "mongoose";
 import validator from "validator";
 import bcrypt from "bcrypt";
 
+/**
+ * Interface representing a user document.
+ *
+ * @interface IUser
+ * @extends Document
+ */
 export interface IUser extends Document {
   name: string;
   email: string;
@@ -13,12 +19,24 @@ export interface IUser extends Document {
   passwordResetToken: string;
   passwordResetExpires: Date;
   active: boolean;
+  /**
+   * Method to check if the provided password matches the user's stored password.
+   *
+   * @param {string} candidatePassword - The password to check.
+   * @param {string} userPassword - The user's stored password.
+   * @returns {Promise<boolean>} - A Promise that resolves to true if the passwords match, false otherwise.
+   */
   correctPassword(
     password: string,
     candidatePassword: string
   ): Promise<boolean>;
 }
 
+/**
+ * Mongoose schema for the User model.
+ *
+ * @type {Schema<IUser>}
+ */
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -63,8 +81,16 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+/**
+ * Mongoose pre-save middleware to hash the password before saving the user.
+ *
+ * @function
+ * @async
+ * @param {Function} next - The next function in the middleware chain.
+ * @returns {Promise<void>} - A Promise that resolves when the middleware completes.
+ */
 userSchema.pre("save", async function (next) {
-  // Only run this function if Password are modifiec.
+  // Only run this function if Password are modified.
   if (!this.isModified("password")) return next();
 
   // Hashed the password with cost of 12
@@ -72,10 +98,18 @@ userSchema.pre("save", async function (next) {
 
   // Delete password confirm field
   this.set("passwordConfirm", undefined);
-  //   this.passwordConfirm = undefined;
   next();
 });
 
+/**
+ * Mongoose method to check if the provided password matches the user's stored password.
+ *
+ * @function
+ * @async
+ * @param {string} candidatePassword - The password to check.
+ * @param {string} userPassword - The user's stored password.
+ * @returns {Promise<boolean>} - A Promise that resolves to true if the passwords match, false otherwise.
+ */
 userSchema.methods.correctPassword = async function (
   candidatePassword: string,
   userPassword: string
@@ -83,6 +117,11 @@ userSchema.methods.correctPassword = async function (
   return await bcrypt.compare(candidatePassword, userPassword);
 };
 
+/**
+ * Mongoose model for the User collection.
+ *
+ * @type {Model<IUser>}
+ */
 const userModel = mongoose.model("User", userSchema);
 
 export default userModel;

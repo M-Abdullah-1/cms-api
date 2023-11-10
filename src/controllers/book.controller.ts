@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import bookModel from "../models/book.model";
-import catchAsync from "../utils/catchAsync";
-import AppError from "../utils/appError";
+import catchAsync from "../utils/catchAsync.util.";
+import AppError from "../utils/appError.util";
 
 export const getAllBooks = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
