@@ -1,5 +1,6 @@
 import express from "express";
 import morgan from "morgan";
+import cors from "cors";
 
 import userRoute from "./routes/user.route";
 import bookRoute from "./routes/book.route";
@@ -15,6 +16,8 @@ const app = express();
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
+
+app.use(cors());
 
 /**
  * Parse incoming JSON data into req.body.
