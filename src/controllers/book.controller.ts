@@ -42,7 +42,7 @@ export const getBook = catchAsync(
 export const createBook = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const newBook = await bookModel.create(req.body);
-    res.status(200).json({
+    res.status(201).json({
       status: "success",
       data: {
         book: newBook,
