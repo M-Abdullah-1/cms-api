@@ -6,6 +6,7 @@ import userModel from "./../models/user.model";
 import { IUser } from "../interfaces/user.interface";
 import { CustomRequest } from "./../interfaces/globalObj.interface";
 import { verifyToken } from "./../utils/token.util";
+import { userRole } from "../enums/user.enum";
 
 /**
  * Middleware to protect routes by verifying and decoding JWT tokens.
@@ -61,3 +62,16 @@ export const protect = catchAsync(
     next();
   }
 );
+
+export const restrictTo = (...roles: userRole[]) => {
+  return (req: CustomRequest, res: Response, next: NextFunction) => {
+    if (!req.user) return next(new AppError("user is undefined.", 404));
+    if (!roles.includes(req.user.role as userRole)) {
+      return next(
+        new AppError("You do not have permission to perform this action", 403)
+      );
+    }
+
+    next();
+  };
+};

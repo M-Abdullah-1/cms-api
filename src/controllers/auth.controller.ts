@@ -79,7 +79,7 @@ export const login = catchAsync(
 
     // 3) If everything ok, send token to client
     const token = signToken(user._id);
-    res.status(200).json({
+    res.status(200).header("Bearer", token).json({
       status: "success",
       token,
     });
