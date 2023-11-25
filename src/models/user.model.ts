@@ -2,6 +2,7 @@ import mongoose, { Document } from "mongoose";
 import validator from "validator";
 import bcrypt from "bcrypt";
 import { IUser } from "./../interfaces/user.interface";
+import crypto from "crypto";
 
 /**
  * Mongoose schema for the User model.
@@ -73,6 +74,25 @@ userSchema.pre("save", async function (next) {
 });
 
 /**
+ * Middleware function to be executed before saving a user document.
+ * It updates the `passwordChangedAt` field if the password is modified or it's a new user.
+ *
+ * @function
+ * @memberof module:models/user
+ * @name preSaveMiddleware
+ * @param {Function} next - The function to be called to pass control to the next middleware.
+ * @returns {void}
+ */
+userSchema.pre("save", function (next) {
+  // Check if the password is modified or it's a new user
+  if (!this.isModified("password") || this.isNew) return next();
+
+  // Update the passwordChangedAt field with the current time minus 1000 milliseconds
+  this.passwordChangedAt = new Date(Date.now() - 1000);
+  next();
+});
+
+/**
  * Mongoose method to check if the provided password matches the user's stored password.
  *
  * @function
@@ -111,10 +131,35 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp: number) {
 };
 
 /**
+ * Generate a random password reset token, hash it, and set the expiration time.
+ *
+ * @function
+ * @memberof module:models/user
+ * @name createPasswordResetToken
+ * @returns {string} The generated reset token.
+ */
+userSchema.methods.createPasswordResetToken = function () {
+  // Generate a random password reset token
+  const resetToken = crypto.randomBytes(32).toString("hex");
+
+  // Hash the reset token and update the passwordResetToken field
+  this.passwordResetToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  // Set the expiration time for the password reset token (10 minutes)
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+
+  // Return the unhashed reset token (to be sent to the user)
+  return resetToken;
+};
+
+/**
  * Mongoose model for the User collection.
  *
  * @type {Model<IUser>}
  */
-const userModel = mongoose.model("User", userSchema);
+const userModel = mongoose.model<IUser>("User", userSchema);
 
 export default userModel;

@@ -13,8 +13,8 @@ export interface IUser extends Document {
   password: string;
   passwordConfirm: string | null;
   passwordChangedAt: Date;
-  passwordResetToken: string;
-  passwordResetExpires: Date;
+  passwordResetToken: string | undefined;
+  passwordResetExpires: Date | undefined;
   active: boolean;
 
   /**
@@ -38,4 +38,6 @@ export interface IUser extends Document {
    * @returns {boolean} Returns true if the user's password was changed after the provided JWT timestamp, otherwise false.
    */
   changedPasswordAfter(JWTTimestamp: number): boolean;
+
+  createPasswordResetToken(): string;
 }
