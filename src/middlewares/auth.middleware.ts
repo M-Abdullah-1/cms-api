@@ -63,6 +63,22 @@ export const protect = catchAsync(
   }
 );
 
+/**
+ * Middleware to restrict access based on user roles.
+ *
+ * @param {userRole[]} roles - The roles allowed to access the route.
+ * @returns {function} Middleware function that checks user roles.
+ *
+ * @typedef {object} CustomRequest - The custom request object.
+ * @property {object} user - The user object on the request.
+ * @property {userRole} user.role - The role of the user.
+ *
+ * @typedef {object} Response - The Express response object.
+ *
+ * @typedef {function} NextFunction - The Express next function.
+ *
+ * @throws {AppError} Throws an AppError if user roles are not allowed.
+ */
 export const restrictTo = (...roles: userRole[]) => {
   return (req: CustomRequest, res: Response, next: NextFunction) => {
     if (!req.user) return next(new AppError("user is undefined.", 404));
