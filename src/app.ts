@@ -6,6 +6,7 @@ import userRoute from "./routes/user.route";
 import bookRoute from "./routes/book.route";
 import AppError from "./utils/appError.util";
 import globalErrorHandler from "./controllers/error.controller";
+import blogRoute from "./routes/blog.route";
 
 const app = express();
 
@@ -25,6 +26,12 @@ app.use(cors());
  */
 app.use(express.json());
 
+/**
+ * Route handling for books API.
+ * @memberof app
+ * @namespace blogRoute
+ */
+app.use("/api/v1/blog", blogRoute);
 /**
  * Route handling for books API.
  * @memberof app
