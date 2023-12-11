@@ -51,10 +51,19 @@ const userSchema = new mongoose.Schema({
     default: true,
     select: false,
   },
-  account: {
-    type: mongoose.Schema.ObjectId,
-    ref: "Author",
+  facebook: {
+    type: String,
   },
+  twitter: {
+    type: String,
+  },
+  insta: {
+    type: String,
+  },
+  about: {
+    type: String,
+  },
+  article: [{ type: mongoose.Schema.ObjectId, ref: "Article" }],
 });
 
 /**
