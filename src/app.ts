@@ -2,7 +2,7 @@ import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 
-import userRoute from "./routes/user.route";
+import authRoute from "./routes/auth.route";
 import bookRoute from "./routes/book.route";
 import AppError from "./utils/appError.util";
 import globalErrorHandler from "./controllers/error.controller";
@@ -44,7 +44,7 @@ app.use("/api/v1/book", bookRoute);
  * @memberof app
  * @namespace userRoute
  */
-app.use("/api/v1/auth", userRoute);
+app.use("/api/v1/auth", authRoute);
 
 /**
  * Health check endpoint.
