@@ -13,8 +13,9 @@ const authorSchema = new mongoose.Schema({
   about: {
     type: String,
   },
+  article: [{ type: mongoose.Schema.ObjectId, ref: "Article" }],
 });
 
-const authorModel = mongoose.model("author", authorSchema);
+const authorModel = mongoose.model("Author", authorSchema);
 
 export default authorModel;

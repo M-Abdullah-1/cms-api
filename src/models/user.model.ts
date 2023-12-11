@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
   photo: String,
   role: {
     type: String,
-    enum: ["admin", "guide", "lead-guide", "user"],
+    enum: ["admin", "author", "user"],
     default: "user",
   },
   password: {
@@ -50,6 +50,10 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
     select: false,
+  },
+  account: {
+    type: mongoose.Schema.ObjectId,
+    ref: "Author",
   },
 });
 

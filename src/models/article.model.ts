@@ -36,6 +36,11 @@ const articleSchema = new mongoose.Schema(
           type: Number,
           default: 0,
         },
+        user: {
+          type: mongoose.Schema.ObjectId,
+          ref: "User",
+          required: [true, "A comment must belong to a User!"],
+        },
       },
     ],
   },
@@ -44,6 +49,6 @@ const articleSchema = new mongoose.Schema(
   }
 );
 
-const articleModel = mongoose.model("article", articleSchema);
+const articleModel = mongoose.model("Article", articleSchema);
 
 export default articleModel;
