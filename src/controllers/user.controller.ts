@@ -4,6 +4,13 @@ import userModel from "../models/user.model";
 import { userRole } from "../enums/user.enum";
 import AppError from "../utils/appError.util";
 
+/**
+ * Middleware to change user role to author.
+ * @param {Request} req - Express request object.
+ * @param {Response} res - Express response object.
+ * @param {NextFunction} next - Express next function.
+ * @returns {Promise<void>} - Promise representing the asynchronous operation.
+ */
 export const changeRoleToAuthor = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     // get user ID from the request object
@@ -21,6 +28,13 @@ export const changeRoleToAuthor = catchAsync(
   }
 );
 
+/**
+ * Middleware to update user information.
+ * @param {Request} req - Express request object.
+ * @param {Response} res - Express response object.
+ * @param {NextFunction} next - Express next function.
+ * @returns {Promise<void>} - Promise representing the asynchronous operation.
+ */
 export const updateUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const userId = req.params.id;
@@ -48,6 +62,13 @@ export const updateUser = catchAsync(
   }
 );
 
+/**
+ * Middleware to fetch user by ID.
+ * @param {Request} req - Express request object.
+ * @param {Response} res - Express response object.
+ * @param {NextFunction} next - Express next function.
+ * @returns {Promise<void>} - Promise representing the asynchronous operation.
+ */
 export const fetchUserById = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
