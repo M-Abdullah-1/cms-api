@@ -75,7 +75,7 @@ export const fetchUserById = catchAsync(
     const user = await userModel.findById(id);
     if (!user) return next(new AppError("User not found!", 400));
     res.status(200).json({
-      status: "found",
+      status: "success",
       data: {
         user,
       },
