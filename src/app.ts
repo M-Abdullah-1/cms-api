@@ -6,6 +6,7 @@ import authRoute from "./routes/auth.route";
 import AppError from "./utils/appError.util";
 import globalErrorHandler from "./controllers/error.controller";
 import blogRoute from "./routes/blog.route";
+import articleRoute from "./routes/article.route";
 import userRoute from "./routes/user.route";
 
 const app = express();
@@ -27,13 +28,6 @@ app.use(cors());
 app.use(express.json());
 
 /**
- * Route handling for books API.
- * @memberof app
- * @namespace blogRoute
- */
-app.use("/api/v1/blog", blogRoute);
-
-/**
  * Route handling for authentication API.
  * @memberof app
  * @namespace authRoute
@@ -47,6 +41,19 @@ app.use("/api/v1/auth", authRoute);
  */
 app.use("/api/v1/user", userRoute);
 
+/**
+ * Route handling for books API.
+ * @memberof app
+ * @namespace blogRoute
+ */
+app.use("/api/v1/blog", blogRoute);
+
+/**
+ * Route handling for article API.
+ * @memberof app
+ * @namespace articleRoute
+ */
+app.use("/api/v1/article", articleRoute);
 /**
  * Health check endpoint.
  * @memberof app
