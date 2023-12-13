@@ -39,7 +39,9 @@ export const getArticles = catchAsync(
       });
     }
 
-    const articles = await articleModel.find();
+    let filter = {};
+    if (req.query.category) filter = { category: req.query.category };
+    const articles = await articleModel.find(filter);
     res.status(200).json({
       status: "success",
       result: articles.length,
