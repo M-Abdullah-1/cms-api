@@ -2,6 +2,38 @@ import { Request, Response, NextFunction } from "express";
 import catchAsync from "../utils/catchAsync.util";
 import articleModel from "../models/article.model";
 import userModel from "../models/user.model";
+import AppError from "../utils/appError.util";
+
+export const getArticles = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { authorId } = req.params;
+    if (authorId) {
+      const { article: articleIds }: any = await userModel
+        .findById(authorId)
+        .select("article");
+      if (!articleIds) return next(new AppError("Articles not found.", 404));
+
+      const articles = await articleModel.find({ _id: { $in: articleIds } });
+
+      return res.status(200).json({
+        status: "success",
+        result: articles.length,
+        data: {
+          articles,
+        },
+      });
+    }
+
+    const articles = await articleModel.find();
+    res.status(200).json({
+      status: "success",
+      result: articles.length,
+      data: {
+        articles,
+      },
+    });
+  }
+);
 
 export const createArticle = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {

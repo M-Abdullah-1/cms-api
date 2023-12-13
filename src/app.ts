@@ -5,7 +5,7 @@ import cors from "cors";
 import authRoute from "./routes/auth.route";
 import AppError from "./utils/appError.util";
 import globalErrorHandler from "./controllers/error.controller";
-import blogRoute from "./routes/blog.route";
+import authorRoute from "./routes/author.route";
 import articleRoute from "./routes/article.route";
 import userRoute from "./routes/user.route";
 
@@ -46,7 +46,7 @@ app.use("/api/v1/user", userRoute);
  * @memberof app
  * @namespace blogRoute
  */
-app.use("/api/v1/blog", blogRoute);
+app.use("/api/v1/author", authorRoute);
 
 /**
  * Route handling for article API.
