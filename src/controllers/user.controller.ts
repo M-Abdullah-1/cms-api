@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import catchAsync from "../utils/catchAsync.util";
 import userModel from "../models/user.model";
 import { userRole } from "../enums/user.enum";
+import AppError from "../utils/appError.util";
 
 export const changeRoleToAuthor = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -40,6 +41,20 @@ export const updateUser = catchAsync(
     );
     res.status(201).json({
       status: "update",
+      data: {
+        user,
+      },
+    });
+  }
+);
+
+export const fetchUserById = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    const user = await userModel.findById(id);
+    if (!user) return next(new AppError("User not found!", 400));
+    res.status(200).json({
+      status: "found",
       data: {
         user,
       },
