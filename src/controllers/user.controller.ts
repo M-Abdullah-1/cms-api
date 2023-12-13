@@ -19,3 +19,30 @@ export const changeRoleToAuthor = catchAsync(
     }
   }
 );
+
+export const updateUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.params.id;
+    const user = await userModel.findByIdAndUpdate(
+      userId,
+      {
+        name: req.body.name,
+        email: req.body.email,
+        about: req.body.about,
+        facebook: req.body.facebook,
+        twitter: req.body.twitter,
+        insta: req.body.insta,
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+    res.status(201).json({
+      status: "update",
+      data: {
+        user,
+      },
+    });
+  }
+);
