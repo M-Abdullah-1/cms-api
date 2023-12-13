@@ -7,6 +7,10 @@ router
   .route("/")
   .get(articleController.getArticles)
   .post(articleController.createArticle);
-router.route("/:articleId").put(articleController.updateArticle);
+
+router
+  .route("/:articleId")
+  .get(articleController.getArticleById)
+  .put(articleController.updateArticle);
 
 export default router;

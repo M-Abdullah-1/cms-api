@@ -4,6 +4,21 @@ import articleModel from "../models/article.model";
 import userModel from "../models/user.model";
 import AppError from "../utils/appError.util";
 
+export const getArticleById = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { articleId } = req.params;
+    const article = await articleModel.findById(articleId);
+    if (!article) return next(new AppError("Article not found!", 404));
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        article,
+      },
+    });
+  }
+);
+
 export const getArticles = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { authorId } = req.params;
