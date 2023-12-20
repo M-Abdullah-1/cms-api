@@ -59,6 +59,7 @@ export const createArticle = catchAsync(
       heading: req.body.heading,
       description: req.body.description,
       category: req.body.category,
+      author: authorId,
     });
     await userModel.updateOne(
       { _id: authorId },

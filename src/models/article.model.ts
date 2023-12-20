@@ -18,6 +18,11 @@ const articleSchema = new mongoose.Schema(
       enum: ["tech", "sport", "IT", "travel"],
       required: [true, "An article must have category."],
     },
+    author: {
+      type: mongoose.Schema.ObjectId,
+      ref: "User",
+      required: [true, "An article must belong to a User!"],
+    },
     comment: [
       {
         text: {
